@@ -290,3 +290,93 @@ userDetails({ name: "Tracy", loggedIn: true });
 //output
 //Hey Tracy 😎, are you logged in true
 ```
+
+#### Classes in TS
+
+```ts
+class PremiumUser {
+  name: string;
+  premium: boolean;
+  amount: number;
+
+  constructor(name: string, premium: boolean, amount: number) {
+    this.name = name;
+    this.premium = premium;
+    this.amount = amount;
+  }
+
+  getUser() {
+    return `Hey ${this.name} are you a premium user? ${this.premium}. How much $ ${this.amount}`;
+  }
+}
+
+let userOne = new PremiumUser("Tracy", true, 20000);
+let userTwo = new PremiumUser("Hobi", true, 60000);
+
+let premiumUsers: PremiumUser[] = [];
+
+premiumUsers.push(userOne, userTwo);
+
+console.log(premiumUsers);
+```
+
+#### Access modifiers | Member visibility
+
+- We write this access modifiers before the properties listed in the constructors. They include the following:
+
+- public - we can read and change values inside and outside the class. This is also the default visibility modifier, you can add it or not include it.
+- Private - change and read inside the class only
+- readOnly - You can ready the value only inside and outside the class but you can't change the value.
+
+```ts
+class PremiumUser {
+  constructor(name, premium, amount) {
+    this.name = name;
+    this.premium = premium;
+    this.amount = amount;
+  }
+  getUser() {
+    return `Hey ${this.name} are you a premium user? ${this.premium}. How much $ ${this.amount}`;
+  }
+}
+
+let userOne = new PremiumUser("Tracy", true, 20000);
+let userTwo = new PremiumUser("Hobi", true, 60000);
+
+let premiumUsers: PremiumUser[] = [];
+
+premiumUsers.push(userOne, userTwo);
+
+premiumUsers.forEach((user) => {
+  console.log(user.name, user.premium);
+});
+
+console.log(premiumUsers);
+```
+
+#### Modules with Ts
+
+- You can use your classes as modules and import them to your files. This helps with the DRY method where you keep your code base clean and easier to understand.
+
+1. Create a folder in the src folder called modules. Inside the modules folder add the file you want to export. In our case the file name will be `premium.ts`.
+2. Create the module, we shall import the class `PremiumUser` and export it.
+
+```ts
+export class PremiumUser {
+  constructor(
+    public name: string,
+    readonly premium: boolean,
+    private amount: number
+  ) {}
+
+  getUser() {
+    return `Hey ${this.name} are you a premium user? ${this.premium}. How much $ ${this.amount}`;
+  }
+}
+```
+
+3. Import it to the file you want to use
+
+```ts
+import { PremiumUser } from "./modules/premium.js";
+```
