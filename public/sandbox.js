@@ -48,10 +48,20 @@ var userLoggedInTwo = function (loggedIn, name) {
     console.log("Hello " + name + " \uD83D\uDE0F, did you log in properly ? " + loggedIn);
 };
 console.log(userLoggedInTwo('yes I did'));
-var greet = function (user) {
-    console.log(user.name + " say hellooooo \uD83D\uDE0A");
+var premiumUser = function (user) {
+    console.log("Hey " + user.name + ", premium subscribed? " + user.premium + " \uD83D\uDE0A");
 };
-greet({
+premiumUser({
     name: 'tracy',
-    uid: 55,
+    premium: true,
 });
+var add;
+add = function (a, b) {
+    console.log(a + b);
+};
+add(24, 75);
+var userDetails;
+userDetails = function (obj) {
+    console.log("Hey " + obj.name + " \uD83D\uDE0E, are you logged in " + obj.loggedIn);
+};
+userDetails({ name: 'Tracy', loggedIn: true });

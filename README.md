@@ -242,16 +242,51 @@ const greet = (user: { name: string; uid: string | number }) => {
 };
 
 //WIth Type Aliases
-type stringOrNum = string | number;
-type objectName = { name: string; uid: stringOrNum };
-const greet = (user: objectName) => {
-  console.log(`${user.name} say hellooooo 😊`);
+type stringOrNum = string | boolean;
+type objectName = { name: string; premium: stringOrNum };
+
+const premiumUser = (user: objectName) => {
+  console.log(`Hey ${user.name}, premium subscribed? ${user.premium} 😊`);
 };
 
-greet({
+premiumUser({
   name: "tracy",
-  uid: 55,
+  premium: true,
 });
 //output
-//tracy say hellooooo 😊
+//Hey tracy, premium subscribed? true 😊
+```
+
+- Instead of writing out the whole name type for the object properties, we use type aliases to make the code DRY. The `objectName` type aliase can be used in different areas of your code. Hence you won't repeat yourself in your projecct.
+
+#### Function signatures
+
+```ts
+let checkAge: (a: number, b: string, c?: string) => string;
+
+checkAge = (age: number, name: string, country?: string) => {
+  if (age >= 18) {
+    return `Hey ${name}, you can legally drive, yeeaahh🚘`;
+  } else {
+    return `Hey ${name}, you can't drive until you are 18 years 😏`;
+  }
+};
+
+console.log(checkAge(23, "Tracy"));
+```
+
+- For objects you can also use signature. Let's see from an example below.
+
+```ts
+let userDetails: (obj: { name: string; loggedIn: boolean | string }) => void;
+
+type obj = { name: string; loggedIn: boolean | string };
+
+userDetails = (obj) => {
+  console.log(`Hey ${obj.name} 😎, are you logged in ${obj.loggedIn}`);
+};
+
+userDetails({ name: "Tracy", loggedIn: true });
+//output
+//Hey Tracy 😎, are you logged in true
 ```

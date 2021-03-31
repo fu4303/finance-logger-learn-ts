@@ -59,13 +59,32 @@ const userLoggedInTwo = (loggedIn: boolean | string, name: string = 'User', )=>{
 
 console.log(userLoggedInTwo('yes I did'));
 
-type stringOrNum = string | number;
-type objectName = {name: string, uid: stringOrNum};
-const greet = (user: objectName)=>{
-  console.log(`${user.name} say hellooooo 😊`)
+type stringOrNum = string | boolean;
+type objectName = {name: string, premium: stringOrNum};
+
+const premiumUser = (user: objectName)=>{
+  console.log(`Hey ${user.name}, premium subscribed? ${user.premium} 😊`)
 }
 
-greet({
+premiumUser({
   name: 'tracy',
-  uid: 55,
-})
+  premium: true,
+});
+
+let add: (x: number, y: number) => void;
+
+add = (a: number, b: number) =>{
+  console.log(a + b);
+}
+
+add(24, 75);
+
+let userDetails: (obj : {name: string, loggedIn: boolean | string}) => void;
+
+type obj = {name: string, loggedIn: boolean | string};
+
+userDetails = (obj) =>{
+  console.log(`Hey ${obj.name} 😎, are you logged in ${obj.loggedIn}`);
+}
+
+userDetails({name:'Tracy', loggedIn:true});
