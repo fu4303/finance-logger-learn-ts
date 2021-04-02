@@ -1,7 +1,3 @@
-// const anchor = document.querySelector('a')!;
-
-// console.log(anchor.href);
-
 
 import {Invoice} from './modules/invoice.js'
 import {Payments} from './modules/payments.js';
@@ -23,10 +19,11 @@ form.addEventListener('submit', (e: Event)=>{
   e.preventDefault();
   
   let doc: UserDetails;
+  let values:[string,string,number] = [toFrom.value, details.value, amount.valueAsNumber];
   if(type.value === 'invoice'){
-    doc = new Invoice(toFrom.value, details.value, amount.valueAsNumber);
+    doc = new Invoice(...values);
   }else{
-    doc = new Payments(toFrom.value, details.value, amount.valueAsNumber);
+    doc = new Payments(...values);
   }
   list.render(doc, type.value, 'end');
 
@@ -34,36 +31,3 @@ form.addEventListener('submit', (e: Event)=>{
     doc
   )
 } )
-
-
-
-///generics
-const profile= <T  extends {name: string}>(obj: T)=>{
-
-  let randomID = Math.floor(Math.random() * 100);
-  return ({...obj, randomID})
-}
-
-let personOne = profile ({name: 'tracy', age: 24});
-console.log(personOne.name);
-//with interfaces
-enum ResourceType { BOOK, NAME,AUTHOUR}
-interface Resource <T> {
-  uid: ResourceType,
-  resourceName: string,
-  data: T
-}
-
-let academicResources: Resource<string[]> = {
-  uid: ResourceType.AUTHOUR, 
-  resourceName:'Biology', 
-  data: ['tracy', 'Jimin', 'Jungkook', 'Yoongi', 'NamJoon']
-}
-
-let otherResources :Resource<object> ={
-  uid: ResourceType.BOOK,
-  resourceName: 'Software development',
-  data: {name: 'Web development'}
-}
-
-console.log(academicResources, otherResources)
