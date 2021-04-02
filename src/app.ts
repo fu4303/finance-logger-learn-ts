@@ -2,7 +2,11 @@
 
 // console.log(anchor.href);
 
-import {PremiumUser} from './modules/premium.js'
+
+import {Invoice} from './modules/invoice.js'
+import {Payments} from './modules/payments.js';
+import {UserDetails} from './interfaces/formatter.js';
+import { ListTemplate } from './modules/listTemplate.js';
 
 const form = document.querySelector('.new-item-form') as HTMLFormElement;
 
@@ -12,63 +16,54 @@ const toFrom = document.querySelector('#tofrom') as HTMLInputElement;
 const details = document.querySelector('#details') as HTMLInputElement;
 const amount = document.querySelector('#amount') as HTMLInputElement;
 
-
+const ul = document.querySelector('ul')!;
+const  list = new ListTemplate(ul);
 
 form.addEventListener('submit', (e: Event)=>{
   e.preventDefault();
+  
+  let doc: UserDetails;
+  if(type.value === 'invoice'){
+    doc = new Invoice(toFrom.value, details.value, amount.valueAsNumber);
+  }else{
+    doc = new Payments(toFrom.value, details.value, amount.valueAsNumber);
+  }
+  list.render(doc, type.value, 'end');
+
   console.log(
-    type.value,
-    toFrom.value,
-    details.value,
-    amount.valueAsNumber
+    doc
   )
 } )
 
-class Invoice {
-  client: string;
-  detail: string;
-  amount: number;
 
-  constructor(client: string, detail: string, amount: number){
-    this.client = client,
-    this.detail = detail,
-    this.amount = amount;
-  }
 
-  getDetails(){
-    return `${this.client} owes $ ${this.amount} for ${this.amount}` ;
-  }
+///generics
+const profile= <T  extends {name: string}>(obj: T)=>{
 
+  let randomID = Math.floor(Math.random() * 100);
+  return ({...obj, randomID})
 }
 
-let invoiceOne = new Invoice ('Tracy','work on Jane\'s website', 200);
-let invoiceTwo = new Invoice ('Jiminshie','work on App design', 300);
+let personOne = profile ({name: 'tracy', age: 24});
+console.log(personOne.name);
+//with interfaces
+enum ResourceType { BOOK, NAME,AUTHOUR}
+interface Resource <T> {
+  uid: ResourceType,
+  resourceName: string,
+  data: T
+}
 
-console.log(invoiceOne, invoiceTwo);
+let academicResources: Resource<string[]> = {
+  uid: ResourceType.AUTHOUR, 
+  resourceName:'Biology', 
+  data: ['tracy', 'Jimin', 'Jungkook', 'Yoongi', 'NamJoon']
+}
 
-const invoices: Invoice[] = [];
-invoices.push(invoiceOne);
-invoices.push(invoiceTwo);
+let otherResources :Resource<object> ={
+  uid: ResourceType.BOOK,
+  resourceName: 'Software development',
+  data: {name: 'Web development'}
+}
 
-console.log(invoices)
-
-invoiceTwo.client = 'Amy';
-invoiceOne.amount = 1000;
-console.log(invoiceOne, invoiceTwo);
-
-
-
-let userOne = new PremiumUser ('Tracy', true, 20000);
-let userTwo = new PremiumUser ('Hobi', true, 60000);
-
-let premiumUsers :PremiumUser [] = [];
-
-premiumUsers.push(userOne, userTwo);
-
-premiumUsers.forEach(user =>{
-  console.log(user.name, user.premium);
-})
-
-console.log(premiumUsers);
-
-
+console.log(academicResources, otherResources)

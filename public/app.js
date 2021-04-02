@@ -1,40 +1,49 @@
 // const anchor = document.querySelector('a')!;
 // console.log(anchor.href);
-import { PremiumUser } from './modules/premium.js';
+import { Invoice } from './modules/invoice.js';
+import { Payments } from './modules/payments.js';
+import { ListTemplate } from './modules/listTemplate.js';
 const form = document.querySelector('.new-item-form');
 const type = document.querySelector('#type');
 const toFrom = document.querySelector('#tofrom');
 const details = document.querySelector('#details');
 const amount = document.querySelector('#amount');
+const ul = document.querySelector('ul');
+const list = new ListTemplate(ul);
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    console.log(type.value, toFrom.value, details.value, amount.valueAsNumber);
-});
-class Invoice {
-    constructor(client, detail, amount) {
-        this.client = client,
-            this.detail = detail,
-            this.amount = amount;
+    let doc;
+    if (type.value === 'invoice') {
+        doc = new Invoice(toFrom.value, details.value, amount.valueAsNumber);
     }
-    getDetails() {
-        return `${this.client} owes $ ${this.amount} for ${this.amount}`;
+    else {
+        doc = new Payments(toFrom.value, details.value, amount.valueAsNumber);
     }
-}
-let invoiceOne = new Invoice('Tracy', 'work on Jane\'s website', 200);
-let invoiceTwo = new Invoice('Jiminshie', 'work on App design', 300);
-console.log(invoiceOne, invoiceTwo);
-const invoices = [];
-invoices.push(invoiceOne);
-invoices.push(invoiceTwo);
-console.log(invoices);
-invoiceTwo.client = 'Amy';
-invoiceOne.amount = 1000;
-console.log(invoiceOne, invoiceTwo);
-let userOne = new PremiumUser('Tracy', true, 20000);
-let userTwo = new PremiumUser('Hobi', true, 60000);
-let premiumUsers = [];
-premiumUsers.push(userOne, userTwo);
-premiumUsers.forEach(user => {
-    console.log(user.name, user.premium);
+    list.render(doc, type.value, 'end');
+    console.log(doc);
 });
-console.log(premiumUsers);
+///generics
+const profile = (obj) => {
+    let randomID = Math.floor(Math.random() * 100);
+    return (Object.assign(Object.assign({}, obj), { randomID }));
+};
+let personOne = profile({ name: 'tracy', age: 24 });
+console.log(personOne.name);
+//with interfaces
+var ResourceType;
+(function (ResourceType) {
+    ResourceType[ResourceType["BOOK"] = 0] = "BOOK";
+    ResourceType[ResourceType["NAME"] = 1] = "NAME";
+    ResourceType[ResourceType["AUTHOUR"] = 2] = "AUTHOUR";
+})(ResourceType || (ResourceType = {}));
+let academicResources = {
+    uid: ResourceType.AUTHOUR,
+    resourceName: 'Biology',
+    data: ['tracy', 'Jimin', 'Jungkook', 'Yoongi', 'NamJoon']
+};
+let otherResources = {
+    uid: ResourceType.BOOK,
+    resourceName: 'Software development',
+    data: { name: 'Web development' }
+};
+console.log(academicResources, otherResources);

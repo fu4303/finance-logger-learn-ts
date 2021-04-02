@@ -380,3 +380,218 @@ export class PremiumUser {
 ```ts
 import { PremiumUser } from "./modules/premium.js";
 ```
+
+**Interface**
+
+- Interface creates a structure for future variables to use. When you list down the properties you want later on the variables using that interface will have all those properties.
+
+```ts
+interface User {
+  name: string;
+  age: number;
+  loggedIn(a: boolean | string): void;
+  changePassword(b: number): number;
+}
+
+const firstUser: User = {
+  name: "Tracy",
+  age: 24,
+  loggedIn(logged: boolean | string): void {
+    console.log(`Hey ${this.name}, are you logged in? ${logged}`);
+  },
+  changePassword(password: number): number {
+    console.log(`I changed my password to ${password}`);
+    return password;
+  },
+};
+
+console.log(firstUser.changePassword(12345667));
+```
+
+- When we create the object `firstUser` it has to contain all the properties stated in the `User` interface otherwise it will cause errors.
+
+#### Extend with Interface
+
+- The extend keyword can be used to copy members of the other named types. This gives you flexiblity of choosing which name types you want to add to the final variable. Let's say from the example below,
+
+```ts
+interface BasicUserDetails {
+  name: string;
+  age: number;
+}
+
+interface LoggingDetails {
+  loggedIn(a: boolean | string): void;
+  changePassword(b: number): number;
+}
+interface User extends BasicUserDetails, LoggingDetails {}
+
+const firstUser: User = {
+  name: "Tracy",
+  age: 24,
+  loggedIn(logged: boolean | string): void {
+    console.log(`Hey ${this.name}, are you logged in? ${logged}`);
+  },
+  changePassword(password: number): number {
+    console.log(`I changed my password to ${password}`);
+    return password;
+  },
+};
+
+console.log(firstUser.changePassword(12345667));
+//output
+//I changed my password to 12345667
+//12345667
+```
+
+- We have created two interfaces that can be added to the `User` interface using the `extend` keyword.
+- In the `User` interface you can choose to add the `BasicUserDetails` or `LoggingDetails` depending on what you want. This makes interface more flexible for use.
+
+#### Implements
+
+- To include a interface in a class you can use `implements` keyword to ensure the classes follows what's in the interface.
+
+```ts
+//our interface
+export interface UserDetails {
+  getUser(): string;
+}
+
+// implement it in our class
+import { UserDetails } from "../interfaces/formatter.js";
+export class PremiumClient implements UserDetails {
+  constructor(
+    public client: string,
+    readonly premium: boolean,
+    private amount: number
+  ) {}
+
+  getUser() {
+    return `Hey ${this.client} are you a premium user? ${this.premium}. How much $ ${this.amount}`;
+  }
+}
+```
+
+- Implementing the interface in variables or array is used the same way as you use name types. Let me show you in the code below.
+
+```ts
+//our interface that we want to implement
+export interface UserDetails {
+  getUser(): string;
+}
+
+// import it in our file
+import { UserDetails } from "./interfaces/formatter.js";
+
+// implement the interface in variables
+let clientOne: UserDetails;
+let clientTwo: UserDetails;
+
+clientOne = new PremiumUser("Jungkook", true, 30000);
+clientTwo = new PremiumClient("NamJoon", true, 40000);
+
+let aprilClients: UserDetails[] = [];
+
+aprilClients.push(clientOne, clientTwo);
+```
+
+- This will ensure that the variable or array used with `clientOne or ClientTwo` and the array aprilClients must have the interface of `UserDetails` to run completely. If the variables didn't inclued the `getUser` method in the `PremiunUser or PremiumClient` there would be an error.
+
+<i>It's important to understand that an implements clause is only a check that the class can be
+treated as the interface type. It doesn't change the type of the class or its methods at all.</i>
+
+#### Generics
+
+- It will know or capture what properties are on the object or array.
+
+```ts
+///generics
+const profile = <T>(obj: T) => {
+  let randomID = Math.floor(Math.random() * 100);
+  return { ...obj, randomID };
+};
+
+let personOne = profile({ name: "tracy", age: 24 });
+console.log(personOne.name);
+```
+
+- To make the type to be more specific you can add `extends name type`. eg extends object to make sure the parameter will be an object not any other data type.
+
+```ts
+///generics
+const profile = <T extends object>(obj: T) => {
+  let randomID = Math.floor(Math.random() * 100);
+  return { ...obj, randomID };
+};
+
+let personOne = profile({ name: "tracy", age: 24 });
+console.log(personOne.name);
+```
+
+- To be more specific you can add a name type that should be included in the type.
+
+```ts
+const profile = <T extends { name: string }>(obj: T) => {
+  let randomID = Math.floor(Math.random() * 100);
+  return { ...obj, randomID };
+};
+
+let personOne = profile({ name: "tracy", age: 24 });
+console.log(personOne.name);
+```
+
+- This means the object must have the name property and it should be a string.
+
+```ts
+interface Resource<T> {
+  uid: number;
+  resourceName: string;
+  data: T;
+}
+let academicResources: Resource<string[]> = {
+  uid: 23,
+  resourceName: "Biology",
+  data: ["tracy", "Jimin", "Jungkook", "Yoongi", "NamJoon"],
+};
+
+console.log(academicResources);
+// output
+//{uid: 23, resourceName: "Biology", data: Array(5)};
+let otherResources: Resource<object> = {
+  uid: 50,
+  resourceName: "Software development",
+  data: { name: "Web development" },
+};
+console.log(otherResources);
+//output
+//{uid: 50, resourceName: "Software development", data: {…}}
+```
+
+#### Enums
+
+- Enums allow a developer to define a set of named constants. Using enums can make it easier to document intent, or create a set of distinct cases. TypeScript provides both numeric and string-based enums.
+
+```ts
+enum ResourceType {
+  BOOK,
+  NAME,
+  AUTHOUR,
+}
+interface Resource<T> {
+  uid: ResourceType;
+  resourceName: string;
+  data: T;
+}
+
+let academicResources: Resource<string[]> = {
+  uid: ResourceType.AUTHOUR,
+  resourceName: "Biology",
+  data: ["tracy", "Jimin", "Jungkook", "Yoongi", "NamJoon"],
+};
+
+let otherResources: Resource<object> = {
+  uid: ResourceType.BOOK,
+  resourceName: "Software development",
+  data: { name: "Web development" },
+};
+```
